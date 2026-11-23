@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAH IMAGE LINK</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+<style>
+:root{--g:#14532d;--g2:#166534;--l:#dcfce7;--l2:#f0fdf4;--bd:#d1e7d8;--tx:#10281a;--mu:#5b7565}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--l2);color:var(--tx);line-height:1.5}
+header{background:var(--g);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;letter-spacing:.06em}.logo span{color:#86efac}
+header button{background:transparent;border:1px solid #86efac;color:#dcfce7;padding:6px 12px;border-radius:8px;cursor:pointer}
+main{max-width:860px;margin:0 auto;padding:18px}
+h1{font-size:1.5rem;margin:8px 0 2px;color:var(--g)}
+.sub{color:var(--mu);margin:0 0 16px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:16px}
+.drop{border:2px dashed #86c99a;background:var(--l2);border-radius:14px;padding:28px 12px;text-align:center;cursor:pointer}
+.drop.on{background:var(--l)}.drop svg{width:42px;height:42px;stroke:var(--g2)}
+.drop small{color:var(--mu);display:block}
+button.p{background:var(--g2);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer}
+button.p:disabled{opacity:.5;cursor:not-allowed}
+button.s{background:var(--l);color:var(--g);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+button.d{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;font:inherit;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.it{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;position:relative;font-size:.8rem}
+.it img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--l)}
+.it .m{padding:6px 8px;color:var(--mu)}
+.it .x{position:absolute;top:6px;right:6px;background:#000a;color:#fff;border:0;border-radius:50%;width:24px;height:24px;cursor:pointer}
+.bar{height:5px;background:var(--l)}.bar i{display:block;height:100%;width:0;background:var(--g2)}
+.st{padding:0 8px 6px;font-size:.75rem}.ok{color:var(--g2)}.er{color:#b91c1c}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.url{font-size:.78rem;word-break:break-all;color:var(--g);padding:0 8px}
+.hist{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.hist img{width:56px;height:56px;border-radius:8px;object-fit:cover;background:var(--l)}
+.hist .i{flex:1;min-width:0;font-size:.82rem}.hist .i div{word-break:break-all}
+.hist .b{display:flex;gap:6px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--g);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;max-width:90%;z-index:9}
+#toast.on{opacity:1}#toast.bad{background:#b91c1c}
+.warn{background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:12px;margin-bottom:16px;font-size:.9rem}
+.hid{display:none!important}
+footer{text-align:center;color:var(--mu);font-size:.8rem;padding:20px}
+</style>
+</head>
+<body>
+<header><div class="logo">FAH <span>IMAGE LINK</span></div><button id="out" class="hid">ออกจากระบบ</button></header>
+<main>
+<h1>อัปโหลดรูปภาพและสร้างลิงก์ได้ง่าย ๆ</h1>
+<p class="sub">JPG, PNG, WEBP, GIF · สูงสุด 60 รูปต่อครั้ง · ไฟล์ละไม่เกิน 5 MB</p>
+<div id="cfgwarn" class="warn hid">⚠️ ยังไม่ได้ตั้งค่า Supabase: เปิดไฟล์ <b>index.html</b> แล้วใส่ <b>SUPABASE_URL</b> และ <b>SUPABASE_KEY</b> ที่บรรทัดบนสุดของสคริปต์ (ดู README)</div>
+
+<section id="auth" class="card hid">
+<b>เข้าสู่ระบบเพื่อใช้งาน</b>
+<p class="sub">ป้องกันคนอื่นอัปโหลดและลบรูปของคุณ</p>
+<input id="em" type="email" placeholder="อีเมล" autocomplete="email">
+<input id="pw" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)" autocomplete="current-password">
+<div class="row" style="margin-top:0"><button class="p" id="li">เข้าสู่ระบบ</button><button class="s" id="su">สมัครสมาชิก</button></div>
+</section>
+
+<div id="app" class="hid">
+<section class="card">
+<label class="drop" id="dz" for="f">
+<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+<div><b>แตะเพื่อเลือกรูป</b> หรือลากมาวางที่นี่</div><small>เลือกได้หลายรูป สูงสุด 60 รูป</small>
+</label>
+<input id="f" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
+<div id="q" class="grid"></div>
+<div class="row">
+<button class="p" id="up" disabled>อัปโหลดและสร้างลิงก์</button>
+<button class="s" id="clr" disabled>ล้างรายการ</button>
+<button class="s hid" id="cpall">คัดลอกลิงก์ทั้งหมด</button>
+<span id="cnt" class="sub" style="margin:0"></span>
+</div>
+</section>
+<section class="card"><b>ประวัติรูปภาพของฉัน</b><div id="h"><p class="sub">กำลังโหลด...</p></div></section>
+</div>
+</main>
+<footer>© FAH IMAGE LINK</footer>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ====== ตั้งค่าตรงนี้ ====== */
+const SUPABASE_URL = "https://YOUR-PROJECT-ID.supabase.co";
+const SUPABASE_KEY = "YOUR-PUBLISHABLE-OR-ANON-KEY"; // ใช้เฉพาะ anon/publishable เท่านั้น ห้ามใส่ service_role
+/* ========================== */
+const BUCKET="images",MAX_FILES=60,MAX_SIZE=5*1024*1024,TYPES=["image/jpeg","image/png","image/webp","image/gif"],CONC=4;
+const $=id=>document.getElementById(id);
+const toast=(m,bad)=>{const t=$("toast");t.textContent=m;t.className="on"+(bad?" bad":"");clearTimeout(t._);t._=setTimeout(()=>t.className="",2800)};
+const fmt=n=>n>1048576?(n/1048576).toFixed(1)+" MB":Math.ceil(n/1024)+" KB";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+if(SUPABASE_URL.includes("YOUR-PROJECT")||SUPABASE_KEY.includes("YOUR-")){$("cfgwarn").classList.remove("hid");throw new Error("ยังไม่ได้ตั้งค่า Supabase")}
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let uid=null,queue=[],busy=false;
+
+async function init(){
+  const {data}=await sb.auth.getSession();show(data.session);
+  sb.auth.onAuthStateChange((_,s)=>show(s));
+}
+function show(s){
+  uid=s?s.user.id:null;
+  $("auth").classList.toggle("hid",!!s);$("app").classList.toggle("hid",!s);$("out").classList.toggle("hid",!s);
+  if(s)loadHist();
+}
+$("li").onclick=async()=>{
+  const {error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+  if(error)toast("เข้าสู่ระบบไม่สำเร็จ: "+error.message,1);
+};
+$("su").onclick=async()=>{
+  const {data,error}=await sb.auth.signUp({email:$("em").value.trim(),password:$("pw").value});
+  if(error)return toast("สมัครไม่สำเร็จ: "+error.message,1);
+  toast(data.session?"สมัครสำเร็จ":"สมัครสำเร็จ กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ");
+};
+$("out").onclick=()=>sb.auth.signOut();
+
+function add(files){
+  let skipped=0;
+  for(const f of files){
+    if(queue.length>=MAX_FILES){skipped++;continue}
+    if(!TYPES.includes(f.type)||f.size>MAX_SIZE){skipped++;continue}
+    queue.push({f,id:Math.random().toString(36).slice(2),url:URL.createObjectURL(f),st:"wait",pub:null});
+  }
+  if(skipped)toast(`ข้าม ${skipped} ไฟล์ (ชนิดไม่รองรับ เกิน 5 MB หรือเกิน ${MAX_FILES} รูป)`,1);
+  draw();
+}
+function draw(){
+  $("q").innerHTML=queue.map(i=>`<div class="it" data-id="${i.id}">
+    <img src="${i.url}" alt=""><button class="x" data-x="${i.id}" ${busy?"disabled":""}>×</button>
+    <div class="bar"><i style="width:${i.st==="done"?100:i.st==="up"?60:0}%"></i></div>
+    <div class="m">${esc(i.f.name.slice(0,22))} · ${fmt(i.f.size)}</div>
+    <div class="st ${i.st==="done"?"ok":i.st==="err"?"er":""}">${{wait:"รออัปโหลด",up:"กำลังอัปโหลด...",done:"สำเร็จ ✓",err:"ผิดพลาด: "+esc(i.err||"")}[i.st]}</div>
+    ${i.pub?`<div class="url">${esc(i.pub)}</div><div class="row" style="padding:0 8px 8px;margin-top:6px"><button class="s" data-c="${esc(i.pub)}">Copy Link</button><a href="${esc(i.pub)}" target="_blank" rel="noopener"><button class="s">เปิดดู</button></a></div>`:""}
+  </div>`).join("");
+  const w=queue.filter(i=>i.st==="wait"||i.st==="err").length,d=queue.filter(i=>i.st==="done").length;
+  $("up").disabled=busy||!w;$("clr").disabled=busy||!queue.length;
+  $("cpall").classList.toggle("hid",!d);$("cnt").textContent=queue.length?`${queue.length}/${MAX_FILES} รูป`:"";
+}
+async function one(i){
+  i.st="up";draw();
+  const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif"}[i.f.type];
+  const path=`${uid}/${Date.now()}-${crypto.randomUUID().slice(0,8)}.${ext}`;
+  const {error}=await sb.storage.from(BUCKET).upload(path,i.f,{contentType:i.f.type,cacheControl:"31536000",upsert:false});
+  if(error){i.st="err";i.err=error.message}
+  else{i.st="done";i.pub=sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl}
+  draw();
+}
+$("up").onclick=async()=>{
+  busy=true;draw();
+  const todo=queue.filter(i=>i.st==="wait"||i.st==="err");
+  let n=0;await Promise.all(Array.from({length:CONC},async()=>{while(n<todo.length)await one(todo[n++])}));
+  busy=false;draw();
+  const ok=todo.filter(i=>i.st==="done").length,bad=todo.length-ok;
+  toast(bad?`สำเร็จ ${ok} รูป ผิดพลาด ${bad} รูป`:`อัปโหลดสำเร็จ ${ok} รูป`,!!bad);
+  loadHist();
+};
+$("clr").onclick=()=>{queue.forEach(i=>URL.revokeObjectURL(i.url));queue=[];draw()};
+$("cpall").onclick=()=>copy(queue.filter(i=>i.pub).map(i=>i.pub).join("\n"));
+$("f").onchange=e=>{add([...e.target.files]);e.target.value=""};
+const dz=$("dz");
+["dragover","dragenter"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("on")}));
+["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("on")}));
+dz.addEventListener("drop",e=>add([...e.dataTransfer.files]));
+$("q").onclick=e=>{
+  const x=e.target.closest("[data-x]");if(x){const k=queue.findIndex(i=>i.id===x.dataset.x);URL.revokeObjectURL(queue[k].url);queue.splice(k,1);draw()}
+  const c=e.target.closest("[data-c]");if(c)copy(c.dataset.c);
+};
+async function copy(t){
+  try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(_){return toast("คัดลอกไม่สำเร็จ",1)}a.remove()}
+  toast("คัดลอกลิงก์แล้ว ✓");
+}
+async function loadHist(){
+  const {data,error}=await sb.storage.from(BUCKET).list(uid,{limit:500,sortBy:{column:"created_at",order:"desc"}});
+  if(error){$("h").innerHTML=`<p class="er">โหลดประวัติไม่สำเร็จ: ${esc(error.message)}</p>`;return}
+  const rows=(data||[]).filter(o=>o.name&&o.id);
+  if(!rows.length){$("h").innerHTML='<p class="sub">ยังไม่มีรูปที่อัปโหลด</p>';return}
+  $("h").innerHTML=rows.map(o=>{const p=`${uid}/${o.name}`,u=sb.storage.from(BUCKET).getPublicUrl(p).data.publicUrl;
+    return `<div class="hist"><img src="${esc(u)}" loading="lazy" alt=""><div class="i"><div>${esc(u)}</div><span class="sub">${o.metadata?fmt(o.metadata.size):""}</span></div>
+    <div class="b"><button class="s" data-hc="${esc(u)}">Copy</button><a href="${esc(u)}" target="_blank" rel="noopener"><button class="s">เปิด</button></a><button class="s d" data-hd="${esc(p)}">ลบ</button></div></div>`}).join("");
+}
+$("h").onclick=async e=>{
+  const c=e.target.closest("[data-hc]");if(c)return copy(c.dataset.hc);
+  const d=e.target.closest("[data-hd]");if(!d)return;
+  if(!confirm("ลบรูปนี้ถาวร? ลิงก์จะใช้งานไม่ได้อีก"))return;
+  const {error}=await sb.storage.from(BUCKET).remove([d.dataset.hd]);
+  if(error)return toast("ลบไม่สำเร็จ: "+error.message,1);
+  toast("ลบรูปแล้ว");loadHist();
+};
+init();
+</script>
+</body>
+</html>
